@@ -1,0 +1,16 @@
+# Macro file for IDEA test
+/control/verbose 0
+/run/verbose 0
+/tracking/verbose 1
+#
+/IDEA/CutsAll  0.006 mm
+/IDEA/Physics  FTFP_INCLXX_HP
+#/IDEA/Physics  FTFP_BERT
+/IDEA/Physics  emstandard_opt0
+/run/initialize
+/process/list
+/gun/particle e+
+/gun/energy 300 MeV
+/run/beamOn 1
+#
+

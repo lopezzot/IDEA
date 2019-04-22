@@ -1,0 +1,31 @@
+#
+/vis/open HepRepFile
+/vis/drawVolume
+/vis/viewer/flush
+/vis/scene/add/trajectories
+/vis/scene/add/hits
+/vis/viewer/flush
+#
+# for drawing the tracks
+# if too many tracks cause core dump => storeTrajectory 0
+/tracking/storeTrajectory 1
+/vis/scene/endOfEventAction accumulate
+#
+/control/verbose 2
+/run/verbose 2
+/tracking/verbose 1
+#
+/IDEA/CutsAll  0.006 mm
+#/IDEA/Physics  FTFP_INCLXX_HP
+#/IDEA/Physics  FTFP_BERT
+/IDEA/Physics  emstandard_opt0
+#
+/run/initialize
+/process/list
+#
+/gun/particle e-
+/gun/energy 1 MeV
+/run/beamOn 1
+#
+
+
