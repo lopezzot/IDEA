@@ -33,7 +33,10 @@
 
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
+#include "G4Material.hh"
 
+
+class G4Material;
 class G4VPhysicalVolume;
 class G4GlobalMagFieldMessenger;
 class G4LogicalVolume;
@@ -82,6 +85,23 @@ private:
   G4bool  fCheckOverlaps; // option to activate checking of volumes overlaps
   G4int   fNofLayers;     // number of layers
   G4bool fIDEANewVolumeOn;
+
+  //MATERIALS
+  G4Material* AIR;
+  G4Material* COP;
+  G4Material* KAP;
+  G4Material* SiO2;
+  G4Material* B2O3;
+  G4Material* Al2O3;
+  G4Material* CaO;
+  G4Material *fglas;
+  G4Material *epoxy;
+  G4Material *ARGON;
+  G4Material *CO2;
+  G4Material* VET;
+  G4Material* dlc;
+  G4Material *CF4;
+  G4Material *GAS;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
