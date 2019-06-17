@@ -52,6 +52,8 @@ class IDEANewVolume : public G4PVPlacement
   IDEADetectorConstruction* fConstructor;
   static G4LogicalVolume* IDEANewVolume_log;
 
+  G4LogicalVolume* logicEndCup;  
+  
 };
 
 #endif

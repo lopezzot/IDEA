@@ -134,11 +134,10 @@ void IDEADetectorConstruction::DefineMaterials()
   
   // ---------- Fiberglas, a mean value from tab. 1 in  https://www.asminternational.org/documents/10192/1849770/06781G_p27-34.pdf
   //            mass fraction %:
-  //            SiO2  60 wt%
-  //            B2O3   5 wt%
-  //            Al2O3 13 wt%
-  //            CaO   22 wt%
-  
+  //            SiO2  60%
+  //            B2O3   5%
+  //            Al2O3 13%
+  //            CaO   22%
   G4double fglas_density = 1.99*g/cm3;
   fglas =  new G4Material("fglas", fglas_density, 4);
   fglas->AddMaterial(SiO2, 0.6);
@@ -154,6 +153,7 @@ void IDEADetectorConstruction::DefineMaterials()
   VET->AddMaterial(epoxy, 0.4);
   
   // ---------- DLC - Diamond like carbon
+  // ---------- Pre-preg - We assumed the same density for the pre-preg material
   G4double dlc_density = 2.*g/cm3;
   dlc =  new G4Material("DLC", dlc_density, 1);
   dlc->AddElement(C, 1);
@@ -161,7 +161,7 @@ void IDEADetectorConstruction::DefineMaterials()
   // ---------- GAS, Ar:CO2:CF4 45:15:40
   G4double gas_density= 0.002536 * g/cm3; 
   
-  G4double cf4_density = 0.00393 * g/cm3;
+  G4double cf4_density = 0.00378 * g/cm3;
   a = 12.011*g/mole;
   G4Element* elC = new G4Element("Carbon", "C", z=6., a);  
   a = 18.998*g/mole;
@@ -404,13 +404,15 @@ G4VPhysicalVolume* IDEADetectorConstruction::DefineVolumes()
   auto rwell_pcb_logic          = new G4LogicalVolume(rwell_pcb_fr4_solid, VET, "rwell_pcb_logic", 0, 0, 0);
 
 
-  // ---------- BUILD CATHODE ----------  
-  double rwell_cat_cop_y = -rwell_cat_thick * 0.5 + rwell_cat_cop_thick * 0.5;
+  // ---------- BUILD CATHODE ----------
+  // It looks at the interaction point:
+  // consequently, we place the copper layer up and the fr4 layer down
+  double rwell_cat_cop_y = rwell_cat_thick * 0.5 - rwell_cat_cop_thick * 0.5;
   auto rwell_cat_cop_phys = new G4PVPlacement(0, G4ThreeVector(0, rwell_cat_cop_y, 0),
                 rwell_cat_cop_logic, "rwell_cat_cop_phys", rwell_cat_logic, false, 0);
   G4cout << "============================" << G4endl;
   G4cout << "Cathode y position:\t" << G4endl;
-  G4cout << "copper layer\t" << rwell_cat_cop_y << G4endl;
+  G4cout << "copper\t" << rwell_cat_cop_y << G4endl;
    
   // ------------------ BUILD micro-RWELL + readout -----------------  
   //   5     micron rame    --> hole den + "dead strips" --------
@@ -421,21 +423,22 @@ G4VPhysicalVolume* IDEADetectorConstruction::DefineVolumes()
   //   35    micron copper  --> full                     --------
   //   1.6   mm vetronite   --> full                     --------
   // ----------------------------------------------------------------
-  double rwell_pcb_cop_hole_y = rwell_pcb_thick * 0.5 - rwell_pcb_cop_hole_thick * 0.5; 
-  double rwell_pcb_kap_y      = rwell_pcb_cop_hole_y - rwell_pcb_cop_hole_thick * 0.5 - rwell_pcb_kap_thick * 0.5; 
-  double rwell_pcb_dlc_y      = rwell_pcb_kap_y - rwell_pcb_kap_thick * 0.5 - rwell_pcb_dlc_thick * 0.5;
-  double rwell_pcb_grid_y     = rwell_pcb_dlc_y - rwell_pcb_dlc_thick * 0.5 - rwell_pcb_grid_thick * 0.5;
-  double rwell_pcb_prepreg_y  = rwell_pcb_grid_y - rwell_pcb_grid_thick * 0.5 - rwell_pcb_prepreg_thick * 0.5;
-  double rwell_pcb_cop_y      = rwell_pcb_prepreg_y - rwell_pcb_prepreg_thick * 0.5 - rwell_pcb_cop_thick * 0.5;
+  double rwell_pcb_cop_hole_y = - rwell_pcb_thick * 0.5 + rwell_pcb_cop_hole_thick * 0.5; 
+  double rwell_pcb_kap_y      = rwell_pcb_cop_hole_y + rwell_pcb_cop_hole_thick * 0.5 + rwell_pcb_kap_thick * 0.5; 
+  double rwell_pcb_dlc_y      = rwell_pcb_kap_y + rwell_pcb_kap_thick * 0.5 + rwell_pcb_dlc_thick * 0.5;
+  double rwell_pcb_grid_y     = rwell_pcb_dlc_y + rwell_pcb_dlc_thick * 0.5 + rwell_pcb_grid_thick * 0.5;
+  double rwell_pcb_prepreg_y  = rwell_pcb_grid_y + rwell_pcb_grid_thick * 0.5 + rwell_pcb_prepreg_thick * 0.5;
+  double rwell_pcb_cop_y      = rwell_pcb_prepreg_y + rwell_pcb_prepreg_thick * 0.5 + rwell_pcb_cop_thick * 0.5;
 
   G4cout << "============================" << G4endl;
   G4cout << "PCB y position:\t " << G4endl;
-  G4cout << "copper w/ hole\t" << rwell_pcb_cop_hole_y << G4endl;
-  G4cout << "kapton\t" << rwell_pcb_kap_y << G4endl;
-  G4cout << "dlc\t" << rwell_pcb_dlc_y << G4endl;
-  G4cout << "grid\t" << rwell_pcb_grid_y << G4endl;
-  G4cout << "prepreg\t" << rwell_pcb_prepreg_y << G4endl;
   G4cout << "copper\t" << rwell_pcb_cop_y << G4endl;
+  G4cout << "prepreg\t" << rwell_pcb_prepreg_y << G4endl;
+  G4cout << "grid\t" << rwell_pcb_grid_y << G4endl;
+  G4cout << "dlc\t" << rwell_pcb_dlc_y << G4endl;
+  G4cout << "kapton\t" << rwell_pcb_kap_y << G4endl;
+  G4cout << "copper\t" << rwell_pcb_cop_hole_y << G4endl;
+  G4cout << "============================\n" << G4endl;
 
   auto rwell_pcb_cop_hole_phys = new G4PVPlacement(0, G4ThreeVector(0, rwell_pcb_cop_hole_y, 0),
                  rwell_pcb_cop_hole_logic, "rwell_pcb_cop_hole_phys", rwell_pcb_logic, false, 0);
@@ -454,24 +457,25 @@ G4VPhysicalVolume* IDEADetectorConstruction::DefineVolumes()
   // -- PLACEMENT WITHIN THE CHAMBER  -- 
   // -----------------------------------	
 
-  // ---------- PLACE CATHODE ----------  
-  double rwell_cat_y = rwell_ch_thick * 0.5 - rwell_cat_thick * 0.5;
+  // ---------- PLACE CATHODE ----------
+  // It looks at the interaction point
+  double rwell_cat_y = - rwell_ch_thick * 0.5 + rwell_cat_thick * 0.5;
   auto rwell_cat_phys = new G4PVPlacement(0, G4ThreeVector(0, rwell_cat_y, 0),
                 rwell_cat_logic, "rwell_cat_phys", rwell_ch_logic, false, 0);
 
   // ------------ PLACE micro-RWELL + readout ------------  
-  double rwell_pcb_y = - rwell_ch_thick * 0.5 + rwell_pcb_thick * 0.5;
+  double rwell_pcb_y = rwell_ch_thick * 0.5 - rwell_pcb_thick * 0.5;
   auto rwell_pcb_phys = new G4PVPlacement(0, G4ThreeVector(0, rwell_pcb_y, 0),
                  rwell_pcb_logic, "rwell_pcb_phys", rwell_ch_logic, false, 0);
 
-  G4cout << "=== PLACEMENT ===" << G4endl;
-  G4cout << "Chamber size\t" << rwell_x_width << '\t' << rwell_y_width << '\t' << rwell_z_width << G4endl;
-  G4cout << "Cathode " << rwell_cat_y << "\t copper " << rwell_cat_cop_y << G4endl; 
-  G4cout << "PCB " << rwell_pcb_y << " \t cop hole " << rwell_pcb_cop_hole_y << "\t kap " 
-      << rwell_pcb_kap_y << "\t dlc " << rwell_pcb_dlc_y << "\t grid " << rwell_pcb_grid_y << "\t prepreg " << rwell_pcb_prepreg_y << "\t cop " << rwell_pcb_cop_y << G4endl;
+  G4cout << "===== PLACEMENT =====" << G4endl;
+  G4cout << "Chamber size: \t x = " << rwell_x_width << "\t y = " << rwell_y_width << "\t z = " << rwell_z_width << G4endl;
+  G4cout << "CAT: \t y = " << rwell_cat_y << "\n\t copper_y = " << rwell_cat_cop_y << G4endl; 
+  G4cout << "PCB: \t y = " << rwell_pcb_y << " \n\t top cop = " << rwell_pcb_cop_hole_y << "\n\t kapton = " 
+      << rwell_pcb_kap_y << "\n\t dlc = " << rwell_pcb_dlc_y << "\n\t grid = " << rwell_pcb_grid_y << "\n\t prepreg = " << rwell_pcb_prepreg_y << "\n\t cop = " << rwell_pcb_cop_y << G4endl;
 
   G4cout << "DISTANCES" << G4endl;
-  double rwell_cat_to_pcb = rwell_cat_y - rwell_pcb_y - (rwell_cat_thick + rwell_pcb_thick) * 0.5;
+  double rwell_cat_to_pcb = rwell_pcb_y - rwell_cat_y - (rwell_cat_thick + rwell_pcb_thick) * 0.5;
   G4cout << "Drift gap " << rwell_cat_to_pcb << '\n' << G4endl;
 
 

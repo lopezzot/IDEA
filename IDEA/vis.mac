@@ -23,8 +23,14 @@
 /run/initialize
 /process/list
 #
-/gun/particle e-
-/gun/energy 1 MeV
+/gps/source/intensity 1
+/gps/particle geantino
+/gps/energy 1.0 MeV
+/gps/pos/type Point
+/gps/pos/centre 0.0 0.0 0.0
+/gps/direction 0.0 0.0 1.0
+#/gun/particle e-
+#/gun/energy 1 MeV
 /run/beamOn 1
 #
 
