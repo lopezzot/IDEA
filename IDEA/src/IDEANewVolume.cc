@@ -56,4 +56,21 @@ IDEANewVolume::IDEANewVolume(G4RotationMatrix *pRot,
                             "IDEANewVolume_log",0,0,0);
  
  SetLogicalVolume(IDEANewVolume_log); 
+
+
+ G4double EndCupR = (2.5)*mm;
+  G4double EndCupZ = (2.5)*mm;
+  G4double EndCup_x = 0.0*mm; 
+  G4double EndCup_y = 0.0*mm;
+  G4double EndCup_z = 0.0*mm;
+  G4ThreeVector positionEndCup = G4ThreeVector(EndCup_x,EndCup_y,EndCup_z);
+  G4Tubs* SolidEndCup = new G4Tubs("SolidEndCup",0.,EndCupR,EndCupZ,0.,CLHEP::twopi);
+  logicEndCup = new G4LogicalVolume( SolidEndCup, G4NistManager::Instance()->FindOrBuildMaterial("G4_Al"),"LogicEndCup",0,0,0);
+  new G4PVPlacement(0,               
+                    positionEndCup, 
+                    logicEndCup,    
+                    "physiEndCup",  
+                    IDEANewVolume_log,     
+                    false,          
+                    0);             
 }

@@ -36,6 +36,7 @@
 #include "G4Box.hh"
 #include "G4Event.hh"
 #include "G4ParticleGun.hh"
+#include "G4GeneralParticleSource.hh"
 #include "G4ParticleTable.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4SystemOfUnits.hh"
@@ -57,6 +58,10 @@ IDEAPrimaryGeneratorAction::IDEAPrimaryGeneratorAction()
  : G4VUserPrimaryGeneratorAction(),
    fParticleGun(nullptr)
 {
+
+  fParticleGun = new G4GeneralParticleSource ();
+
+  /*
   G4int nofParticles = 1;
   fParticleGun = new G4ParticleGun(nofParticles);
 
@@ -67,6 +72,7 @@ IDEAPrimaryGeneratorAction::IDEAPrimaryGeneratorAction()
   fParticleGun->SetParticleDefinition(particleDefinition);
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
   fParticleGun->SetParticleEnergy(50.*MeV);
+  */
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -80,6 +86,7 @@ IDEAPrimaryGeneratorAction::~IDEAPrimaryGeneratorAction()
 
 void IDEAPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
+  /*
   G4double cosTheta;
   G4double sinTheta;
   G4double phi;
@@ -100,7 +107,9 @@ void IDEAPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   //fParticleGun->SetParticlePosition(G4ThreeVector((xV)*mm,(yV)*mm,(zV)*mm));
   fParticleGun->SetParticlePosition(G4ThreeVector(0.,0.,0.));
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(1.,0.,0.));
+ */
   fParticleGun->GeneratePrimaryVertex(anEvent);
+ 
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
