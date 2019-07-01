@@ -1,0 +1,439 @@
+<ROMEFrameworkDefinition> 
+ 
+  <!-- Experiment Definition -->
+  <Experiment>
+    <ExperimentName>Gas Monitor Chamber Track Reconstruction </ExperimentName>
+    <ExperimentShortCut>GMC</ExperimentShortCut>
+    <ProgramName>Analyzer</ProgramName>
+  </Experiment>
+
+<UserMakeFile>
+  <DictionaryHeaders>
+    <Header>
+      <HeaderName>include/util/Waveform</HeaderName>
+    </Header>
+    <Header>
+      <HeaderName>include/util/Geometry</HeaderName>
+    </Header>
+  </DictionaryHeaders>
+  <IncludeDirectories>
+    <IncludeDirectory>include/util</IncludeDirectory>
+  </IncludeDirectories>
+  <AdditionalFiles>
+    <File>
+      <SourceFile>src/util/Waveform</SourceFile>
+      <HeaderFile>include/util/Waveform</HeaderFile>
+    </File>
+    <File>
+      <SourceFile>src/util/Geometry</SourceFile>
+      <HeaderFile>include/util/Geometry</HeaderFile>
+    </File>
+  </AdditionalFiles>
+  
+  <UnixLibraries>
+    <Library>
+      <LibraryName>Minuit</LibraryName>
+    </Library>
+    <Library>
+      <LibraryName>Spectrum</LibraryName>
+    </Library>
+  </UnixLibraries>
+</UserMakeFile>
+
+  <!-- Folders -->
+  <Folders>
+    <Folder>
+      <FolderName>ODB</FolderName>
+      <DataBaseAccess>true</DataBaseAccess>
+      <Field>
+	<FieldName>RunNumber</FieldName>
+	<FieldType>Int_t</FieldType>
+	<FieldComment>Runinfo/Run number</FieldComment>
+	<DataBaseName>odb</DataBaseName>
+	<DataBasePath>"/Runinfo/Run number"</DataBasePath>
+      </Field>
+      <Field>
+	<FieldName>StartTime</FieldName>
+	<FieldType>ROMEString</FieldType>
+	<FieldComment>Runinfo/Start time</FieldComment>
+	<DataBaseName>odb</DataBaseName>
+	<DataBasePath>"/Runinfo/Start time"</DataBasePath>
+      </Field>
+    </Folder>
+    <Folder>
+      <FolderName>Event</FolderName>
+      <NoResetByFramework>false</NoResetByFramework>
+      <NoResetModifiedByFramework>false</NoResetModifiedByFramework>
+      <Include>
+	<IncludeName>include/util/Waveform.h</IncludeName>
+	<IncludeType>local</IncludeType>
+      </Include>
+      <Field>
+	<FieldName>OscWaveform</FieldName>
+	<FieldType>Waveform*</FieldType>
+	<ArraySize>variable</ArraySize>
+	<InheritTObject>true</InheritTObject>
+	<FieldComment>Sense wire waveforms</FieldComment>
+      </Field>
+      <Field>
+	<FieldName>EventTime</FieldName>
+	<FieldType>Int_t</FieldType>
+	<FieldComment>event Unix time</FieldComment>
+      </Field>
+      <Field>
+	<FieldName>TDCRefTime</FieldName>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>TDC reference time</FieldComment>
+	<FieldInitialization>9999999</FieldInitialization>
+      </Field>
+      <Field>
+	<FieldName>OSCRefTime</FieldName>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>Oscilloscope reference time</FieldComment>
+	<FieldInitialization>9999999</FieldInitialization>
+      </Field>
+    </Folder>
+    <Folder>
+      <FolderName>MCTrack</FolderName>
+      <ArraySize>variable</ArraySize>
+      <IgnoreTObjectStreamer>false</IgnoreTObjectStreamer>                              <Field>
+      <FieldName>x0</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldComment>x position of the generated particle</FieldComment>
+    </Field>
+    <Field>
+	<FieldName>y0</FieldName>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>y position of the generated particle</FieldComment>
+      </Field>
+      <Field>
+	<FieldName>z0</FieldName>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>z0 position of the generated particle</FieldComment>
+      </Field>
+      <Field>
+	<FieldName>theta</FieldName>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>azimuthal angle</FieldComment>
+      </Field>
+      <Field>
+	<FieldName>phi</FieldName>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>polar angle</FieldComment>
+      </Field>
+      <Field>
+	<FieldName>nclusters</FieldName>
+	<FieldType>Int_t</FieldType>
+	<FieldComment>Number of ionization clusters</FieldComment>
+      </Field>
+      <Field>
+	<FieldName>drift_time</FieldName>
+	<FieldType>Double_t</FieldType>
+	<ArraySize>variable</ArraySize>
+	<FieldComment>[nclusters]drift time in ns</FieldComment>
+      </Field>
+      <Field>
+	<FieldName>drift_distance</FieldName>
+	<FieldType>Double_t</FieldType>
+	<ArraySize>variable</ArraySize>
+	<FieldComment>[nclusters]drift distance mm</FieldComment>
+      </Field>
+    </Folder>
+    
+    <Folder>
+      <FolderName>MCHit</FolderName>
+      <ArraySize>variable</ArraySize>
+      <IgnoreTObjectStreamer>false</IgnoreTObjectStreamer>   
+      <Field>
+	<FieldName>nclusters</FieldName>
+	<FieldType>Int_t</FieldType>
+	<FieldComment>Number of ionization clusters</FieldComment>
+      </Field>
+      <Field>
+	<FieldName>clusterZ</FieldName>
+	<ArraySize>variable</ArraySize>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>[nclusters]z coordinate of cluster</FieldComment>
+      </Field>                    
+      <Field>
+	<FieldName>clusterY</FieldName>
+	<ArraySize>variable</ArraySize>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>[nclusters]y coordinate of cluster</FieldComment>
+      </Field>
+    </Folder>
+    
+    <Folder>
+      <FolderName>Hit</FolderName>
+      <ArraySize>variable</ArraySize>
+      <IgnoreTObjectStreamer>false</IgnoreTObjectStreamer>                                                 
+      <Field>
+	<FieldName>tube_nr</FieldName>
+	<FieldType>Int_t</FieldType>
+	<FieldComment>tube number</FieldComment>
+      </Field>
+      <Field>
+	<FieldName>t_meas</FieldName>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>Measureted Time </FieldComment>
+	<FieldInitialization>9999999</FieldInitialization>
+      </Field>
+      <Field>
+	<FieldName>d_meas</FieldName>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>Measureted Drift Distance</FieldComment>
+	<FieldInitialization>9999999</FieldInitialization>
+      </Field>
+      <Field>
+	<FieldName>d_true</FieldName>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>Generated Drift Distance</FieldComment>
+	<FieldInitialization>999</FieldInitialization>
+      </Field>
+      <Field>
+	<FieldName>d_trk</FieldName>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>Estimated track impact parameter</FieldComment>
+	<FieldInitialization>999</FieldInitialization>
+      </Field>
+    </Folder>
+ 
+    <Folder>
+      <FolderName>Track</FolderName>
+      <ArraySize>variable</ArraySize>
+      <IgnoreTObjectStreamer>false</IgnoreTObjectStreamer>                                                 
+      <Field>
+	<FieldName>x0_trk</FieldName>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>intecpt x coordinate</FieldComment>
+      </Field>
+      <Field>
+	<FieldName>x0_trk_err</FieldName>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>intecpt x coordinate error</FieldComment>
+      </Field>
+      <Field>
+	<FieldName>y0_trk</FieldName>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>intecpt y coordinate</FieldComment>
+      </Field>
+      <Field>
+	<FieldName>y0_trk_err</FieldName>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>intecpt x coordinate error</FieldComment>
+      </Field>
+      <Field>
+	<FieldName>z0_trk</FieldName>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>intecpt z coordinate</FieldComment>
+      </Field>
+      <Field>
+	<FieldName>z0_trk_err</FieldName>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>intecpt x coordinate</FieldComment>
+      </Field>
+      <Field>
+	<FieldName>theta_trk</FieldName>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>azimuthal angle</FieldComment>
+      </Field>
+      <Field>
+	<FieldName>theta_trk_err</FieldName>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>azimuthal angle_err</FieldComment>
+      </Field>
+      <Field>
+	<FieldName>phi_trk</FieldName>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>polar angle</FieldComment>
+      </Field>
+      <Field>
+	<FieldName>phi_trk_err</FieldName>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>polar angle err</FieldComment>
+      </Field>
+      <Field>
+      <FieldName>d_true_central</FieldName>
+      <FieldType>Double_t</FieldType>
+      <FieldComment>distance of minimum approch central tube</FieldComment>
+      </Field>
+      <Field>
+	<FieldName>d_trk_central</FieldName>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>distance of minimum approch central tube</FieldComment>
+      </Field>
+      <Field>
+	<FieldName>d_meas_central</FieldName>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>measured distance central tube</FieldComment>
+      </Field>
+      <Field>
+	<FieldName>chi2</FieldName>
+	<FieldType>Double_t</FieldType>
+	<FieldComment>Fit chi2</FieldComment>
+      </Field>
+    </Folder>
+  </Folders>
+  
+  <!--TASKS-->
+  <Tasks>
+    <Task>
+      <TaskName>MCGenerator</TaskName>
+      <Histogram>
+	<HistName>HTIME</HistName>
+	<HistType>TH1D</HistType>
+	<HistXLabel>drift_time</HistXLabel>
+	<HistYLabel>Entries</HistYLabel>
+	<HistXNbins>100</HistXNbins>
+	<HistXmin>-10</HistXmin>
+	<HistXmax>1000</HistXmax>
+	<HistTitle>drift time distribution</HistTitle>
+      </Histogram>
+    </Task>
+    <Task>
+      <TaskName>ReadData</TaskName>
+    </Task>
+    <Task>
+      <TaskName>WaveformAnalysis</TaskName>
+    </Task>
+    <Task>
+      <TaskName>Calibrations</TaskName>
+    </Task>
+    <Task>
+      <TaskName>TrackFit</TaskName>
+      <IncludeName>TMinuit.h</IncludeName>
+      <SteeringParameters>
+	<SteeringParameterField>
+	  <SPFieldName>MinNhit</SPFieldName>
+	  <SPFieldType>Int_t</SPFieldType>
+	  <SPFieldInitialization>6</SPFieldInitialization>
+	  <SPFieldComment>Minimum number of hits</SPFieldComment>
+	</SteeringParameterField>
+      </SteeringParameters>
+      <SteeringParameters>
+	<SteeringParameterField>
+	  <SPFieldName>MaxChi2</SPFieldName>
+	  <SPFieldType>Double_t</SPFieldType>
+	  <SPFieldInitialization>100</SPFieldInitialization>
+	  <SPFieldComment>Maximum chi2</SPFieldComment>
+	</SteeringParameterField>
+      </SteeringParameters>
+      <Histogram>
+	<HistName>HResidual</HistName>
+	<HistType>TH1D</HistType>
+	<HistXLabel>residual</HistXLabel>
+	<HistYLabel>Entries</HistYLabel>
+	<HistXNbins>1000</HistXNbins>
+	<HistXmin>-1</HistXmin>
+	<HistXmax>1</HistXmax>
+	<HistTitle>rd_meas-d_trk distribution</HistTitle>
+      </Histogram>
+    </Task>
+  </Tasks>
+
+  <!-- ROOTfiles -->
+  <Trees>
+    <Tree>
+      <TreeName>DataTree</TreeName>      
+      <Branch>
+	<BranchName>mctracks</BranchName>
+	<RelatedFolder>MCTrack</RelatedFolder>
+      </Branch>
+      <Branch>
+	<BranchName>hits</BranchName>
+	<RelatedFolder>Hit</RelatedFolder>
+      </Branch>
+      <Branch>
+	<BranchName>mchits</BranchName>
+	<RelatedFolder>MCHit</RelatedFolder>
+      </Branch>
+      <Branch>
+	<BranchName>tracks</BranchName>
+	<RelatedFolder>Track</RelatedFolder>
+      </Branch>
+    </Tree>
+  </Trees>
+<Tabs>
+<Tab>
+   <TabName>EventDisplay</TabName>
+   <TabTitle>Event Display</TabTitle>
+</Tab>
+</Tabs>
+
+  
+  <!-- Steering Parameters -->
+  <GlobalSteeringParameters>
+    <SteeringParameterField>
+      <SPFieldName>tube_radius</SPFieldName>
+      <SPFieldType>Double_t</SPFieldType>
+      <SPFieldInitialization>9.75/2.</SPFieldInitialization>
+      <SPFieldComment>tube radius in mm </SPFieldComment>
+    </SteeringParameterField>
+    <SteeringParameterField>
+      <SPFieldName>tube_lenght</SPFieldName>
+      <SPFieldType>Double_t</SPFieldType>
+      <SPFieldInitialization>250</SPFieldInitialization>
+      <SPFieldComment>tube lenght in mm.</SPFieldComment>
+    </SteeringParameterField>
+    <SteeringParameterField>
+      <SPFieldName>lambda</SPFieldName>
+      <SPFieldType>Double_t</SPFieldType>
+      <SPFieldInitialization>0.46</SPFieldInitialization>
+      <SPFieldComment>interaction lenght in mm</SPFieldComment>
+    </SteeringParameterField>
+    <SteeringParameterField>
+      <SPFieldName>xBeam</SPFieldName>
+      <SPFieldType>Double_t</SPFieldType>
+      <SPFieldInitialization>0.</SPFieldInitialization>
+      <SPFieldComment>beam distance from the first tube in mm</SPFieldComment>
+    </SteeringParameterField>
+<SteeringParameterField>
+      <SPFieldName>yBeamSpot</SPFieldName>
+      <SPFieldType>Double_t</SPFieldType>
+      <SPFieldInitialization>10.5</SPFieldInitialization>
+      <SPFieldComment>Y estention for the beam in mm</SPFieldComment>
+    </SteeringParameterField>
+    <SteeringParameterField>  
+    <SPFieldName>zBeam</SPFieldName>
+      <SPFieldType>Double_t</SPFieldType>
+      <SPFieldInitialization>-200.</SPFieldInitialization>
+      <SPFieldComment>beam distance from the first tube in mm</SPFieldComment>
+    </SteeringParameterField>
+<SteeringParameterField>
+      <SPFieldName>beamSpread</SPFieldName>
+      <SPFieldType>Double_t</SPFieldType>
+      <SPFieldInitialization>0.02</SPFieldInitialization>
+      <SPFieldComment>beam angular spread in rad</SPFieldComment>
+    </SteeringParameterField>
+<SteeringParameterField>
+      <SPFieldName>central_tube</SPFieldName>
+      <SPFieldType>Double_t</SPFieldType>
+      <SPFieldInitialization>5</SPFieldInitialization>
+      <SPFieldComment>central tube</SPFieldComment>
+    </SteeringParameterField>
+  </GlobalSteeringParameters>
+
+
+  <MidasBanks>
+    <EventDefinition>
+      <EventName>DAQ</EventName>
+      <EventID>1</EventID>
+      <EventTriggerMask>-1</EventTriggerMask>
+      <EventSamplingRate>2</EventSamplingRate>
+      <Banks>
+	<Bank>
+	  <BankName>TDC0</BankName>
+	  <BankType>DWORD</BankType>
+	</Bank>
+	<Bank>
+	  <BankName>LOSC</BankName>
+	  <BankType>DWORD</BankType>
+	</Bank>
+	<Bank>
+	  <BankName>CONF</BankName>
+	  <BankType>DWORD</BankType>
+	</Bank>
+	</Banks>
+    </EventDefinition>
+  </MidasBanks>
+  </ROMEFrameworkDefinition> 
