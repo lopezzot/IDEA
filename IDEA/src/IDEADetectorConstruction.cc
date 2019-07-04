@@ -486,10 +486,12 @@ G4VPhysicalVolume* IDEADetectorConstruction::DefineVolumes()
   // 13 sector with 5 chambers along Z-axis:
   // We define the angle in the plane XY occupied by each chamber
   // taking into account a minimum separation between each other (given by the rest divided per 13!)
-  G4double rwell_rotAngle = (0.46748636173 + 0.01583558497)*rad;
+  G4double rwell_rotAngle_B1 = (0.46748636173 + 0.01583558497)*rad;
+  G4double rwell_rotAngle_B2 = (0.463232859 + 0.02008908771)*rad;
   G4int rwell_nCopyXY = 13;
   G4int rwell_nCopyZ = 5;
-  fNofLayers = rwell_nCopyZ*rwell_nCopyXY;
+  // We are considering 65 chambers per layer; 2 layers in the barrel region
+  fNofLayers = rwell_nCopyZ*rwell_nCopyXY*2;
   
   //auto solidRwell = new G4Box ("solidRwell", rwell_x_width * 0.5, rwell_y_width * 0.5, rwell_z_width * 0.5);
   //auto logicRwell = new G4LogicalVolume (solidRwell, absorberMaterial, "logicRwell", 0, 0, 0);
@@ -498,9 +500,23 @@ G4VPhysicalVolume* IDEADetectorConstruction::DefineVolumes()
   for (G4int i=0; i < rwell_nCopyXY; i++)
     {
       zRot[i] = new G4RotationMatrix;
-      zRot[i] -> rotateZ (i * rwell_rotAngle);
-      px = (innerRadius + rwell_y_width * 0.5) * cos((twopi/4.) - i * rwell_rotAngle);   
-      py = (innerRadius + rwell_y_width * 0.5) * sin((twopi/4.) - i * rwell_rotAngle);   
+      zRot[i] -> rotateZ (i * rwell_rotAngle_B1);
+      px = (innerRadius + rwell_y_width * 0.5) * cos((twopi/4.) - i * rwell_rotAngle_B1);   
+      py = (innerRadius + rwell_y_width * 0.5) * sin((twopi/4.) - i * rwell_rotAngle_B1);   
+
+      for (G4int j=0; j < rwell_nCopyZ; j++)
+	{
+	  pz = -hz + (2*j+1) * rwell_z_width * 0.5;
+	  new G4PVPlacement (zRot[i], G4ThreeVector (px, py, pz), rwell_ch_logic, "rwell_ch_phys", logicPreshower, false, i*rwell_nCopyZ + j);
+	}
+    }
+
+  for (G4int i=rwell_nCopyXY*rwell_nCopyZ + 1; i < rwell_nCopyXY*rwell_nCopyZ +1+rwell_nCopyXY; i++)
+    {
+      zRot[i] = new G4RotationMatrix;
+      zRot[i] -> rotateZ (i * rwell_rotAngle_B2);
+      px = (innerRadius + 10*CLHEP::mm + rwell_y_width * 0.5) * cos((twopi/4.) - i * rwell_rotAngle_B2);   
+      py = (innerRadius + 10*CLHEP::mm + rwell_y_width * 0.5) * sin((twopi/4.) - i * rwell_rotAngle_B2);   
 
       for (G4int j=0; j < rwell_nCopyZ; j++)
 	{
